@@ -28,10 +28,11 @@ const WIDTHS = [640, 1024, 1600, 1920];
 async function buildHero() {
   const input = join(ASSETS, 'hero-original.jpg');
 
-  // BEFORE: one huge, high-quality JPEG shipped to all devices (the anti-pattern).
+  // BEFORE: deliberately enormous JPEG (upscaled, max quality) shipped to ALL devices.
+  // Target ~3–5MB so Slow-4G Lighthouse LCP collapses on mobile.
   await sharp(input)
-    .resize({ width: 2400, withoutEnlargement: true })
-    .jpeg({ quality: 92, mozjpeg: false })
+    .resize({ width: 4800, kernel: sharp.kernel.lanczos3 })
+    .jpeg({ quality: 100, mozjpeg: false, chromaSubsampling: '4:4:4' })
     .toFile(join(ASSETS, 'hero-before.jpg'));
 
   // AFTER: responsive WebP + JPEG fallback at multiple widths.
@@ -52,10 +53,10 @@ async function buildGallery(base) {
   const input = join(ASSETS, `${base}-original.jpg`);
   if (!existsSync(input)) return;
 
-  // BEFORE: full-size JPEG.
+  // BEFORE: oversized, near-lossless JPEGs (eagerly loaded below the fold).
   await sharp(input)
-    .resize({ width: 1200, withoutEnlargement: true })
-    .jpeg({ quality: 90 })
+    .resize({ width: 3200, kernel: sharp.kernel.lanczos3 })
+    .jpeg({ quality: 98, mozjpeg: false })
     .toFile(join(ASSETS, `${base}-before.jpg`));
 
   // AFTER: compact WebP + JPEG fallback at two sensible widths.

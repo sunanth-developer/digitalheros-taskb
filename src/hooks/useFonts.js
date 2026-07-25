@@ -16,11 +16,6 @@ import { useEffect } from 'react';
  *   - Uses `display=swap`, so system fonts render immediately and swap in the
  *     web font when ready — no blocked FCP.
  */
-const BLOCKING_HREF =
-  'https://fonts.googleapis.com/css2' +
-  '?family=Playfair+Display:wght@400;500;600;700;800;900' +
-  '&family=Inter:wght@100;200;300;400;500;600;700;800;900';
-
 const OPTIMIZED_HREF =
   'https://fonts.googleapis.com/css2' +
   '?family=Playfair+Display:wght@600;700' +
@@ -29,24 +24,26 @@ const OPTIMIZED_HREF =
 
 export default function useFonts(mode) {
   useEffect(() => {
+    // Before page injects its own (much heavier) blocking fonts via criticalBloat.js
+    // at module-eval time — skip the light hook path so we don't double-load.
+    if (mode === 'blocking') return undefined;
+
     const nodes = [];
 
-    if (mode === 'optimized') {
-      const pre1 = document.createElement('link');
-      pre1.rel = 'preconnect';
-      pre1.href = 'https://fonts.googleapis.com';
-      nodes.push(pre1);
+    const pre1 = document.createElement('link');
+    pre1.rel = 'preconnect';
+    pre1.href = 'https://fonts.googleapis.com';
+    nodes.push(pre1);
 
-      const pre2 = document.createElement('link');
-      pre2.rel = 'preconnect';
-      pre2.href = 'https://fonts.gstatic.com';
-      pre2.crossOrigin = 'anonymous';
-      nodes.push(pre2);
-    }
+    const pre2 = document.createElement('link');
+    pre2.rel = 'preconnect';
+    pre2.href = 'https://fonts.gstatic.com';
+    pre2.crossOrigin = 'anonymous';
+    nodes.push(pre2);
 
     const sheet = document.createElement('link');
     sheet.rel = 'stylesheet';
-    sheet.href = mode === 'optimized' ? OPTIMIZED_HREF : BLOCKING_HREF;
+    sheet.href = OPTIMIZED_HREF;
     sheet.dataset.perfFont = mode;
     nodes.push(sheet);
 

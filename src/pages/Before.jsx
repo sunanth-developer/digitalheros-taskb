@@ -1,45 +1,84 @@
-import Hero from '../components/Hero.jsx';
-import VersionBadge from '../components/VersionBadge.jsx';
-import Footer from '../components/Footer.jsx';
-import useFonts from '../hooks/useFonts.js';
-// Anti-pattern: Gallery is imported statically, so its code + all its full-size
-// image imports are pulled into the initial bundle (no code splitting).
-import Gallery from '../components/Gallery.jsx';
-
-// Anti-pattern: a single ~1.1MB, 2400px-wide JPEG shipped to every device.
-import heroBefore from '../assets/hero-before.jpg';
-
 /*
  * BEFORE — the deliberately unoptimized version.
  *
- * Intentional performance anti-patterns demonstrated here:
- *   1. Large JPEG hero (2400px, ~1.1MB) served to all viewports.
- *   2. No responsive images — no srcSet / <picture>, so mobile downloads desktop pixels.
- *   3. No preload of the LCP image — it can't start until the JS renders the <img>.
- *   4. Eager loading of below-the-fold gallery images (no lazy loading).
- *   5. Render-blocking fonts: many weights of two families, no font-display: swap.
- *   6. No explicit image dimensions on the hero → Cumulative Layout Shift.
- *   7. No code splitting — everything loads immediately.
- *
- * The page still looks and functions correctly; it's just slow.
+ * Anti-patterns that actually move Lighthouse needles (critical path, not
+ * cosmetic comments):
+ *   1. Static import of criticalBloat.js → ~1.8s sync main-thread work + blocking fonts
+ *   2. Enormous JPEG hero (upscaled ~4800px) with no srcSet / preload / dimensions
+ *   3. Extra full-size images competing for bandwidth (hidden, eager)
+ *   4. UnoptimizedGallery with 6 oversized eager JPEGs (no lazy load, no srcSet)
+ *   5. Late-injected promo banner → Cumulative Layout Shift
+ *   6. Secondary long tasks + forced reflows after mount → TBT
  */
+
+// Side-effect import: runs when this chunk evaluates (only on /before).
+import { runSecondaryLongTasks } from '../before/criticalBloat.js';
+import { useEffect, useState } from 'react';
+
+import Hero from '../components/Hero.jsx';
+import VersionBadge from '../components/VersionBadge.jsx';
+import Footer from '../components/Footer.jsx';
+import UnoptimizedGallery from '../components/UnoptimizedGallery.jsx';
+
+import heroBefore from '../assets/hero-before.jpg';
+import interiorBefore from '../assets/interior-before.jpg';
+import interior2Before from '../assets/interior2-before.jpg';
+
 export default function Before() {
-  useFonts('blocking');
+  const [showShiftBanner, setShowShiftBanner] = useState(false);
+
+  useEffect(() => {
+    runSecondaryLongTasks();
+    const t = window.setTimeout(() => setShowShiftBanner(true), 1200);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const background = (
-    // No width/height (causes layout shift), no loading strategy, no responsive
-    // sources, high fetch priority not set. This is the LCP element done wrong.
-    <img src={heroBefore} alt="Modern luxury residential building exterior" />
+    <>
+      <img src={heroBefore} alt="Modern luxury residential building exterior" />
+      <img
+        src={heroBefore}
+        alt=""
+        aria-hidden="true"
+        style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+      />
+      <img
+        src={interiorBefore}
+        alt=""
+        aria-hidden="true"
+        style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+      />
+      <img
+        src={interior2Before}
+        alt=""
+        aria-hidden="true"
+        style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+      />
+    </>
   );
 
   return (
     <>
+      {showShiftBanner && (
+        <div
+          style={{
+            background: '#c9a15a',
+            color: '#0e1620',
+            textAlign: 'center',
+            padding: '18px 12px',
+            fontWeight: 700,
+            fontSize: '0.95rem',
+          }}
+        >
+          Limited-time offer — Book a site visit this week
+        </div>
+      )}
       <Hero
         background={background}
         title="Homes that reverberate with warmth & luxury"
         subtitle="Three decades of crafting world-class residential, commercial and integrated townships across South India."
       />
-      <Gallery optimized={false} />
+      <UnoptimizedGallery />
       <Footer />
       <VersionBadge variant="before" />
     </>

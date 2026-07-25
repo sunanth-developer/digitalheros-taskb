@@ -1,13 +1,15 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-import Before from './pages/Before.jsx';
 
 /*
- * The After page is loaded with React.lazy() so its (optimized) code — including
- * the below-the-fold Gallery — ships as a separate chunk. This keeps the initial
- * JS payload small, which directly helps Total Blocking Time and Time to Interactive.
+ * BOTH demo pages are code-split.
+ * - Before chunk includes criticalBloat + huge JPEGs (intentionally heavy).
+ * - After chunk stays lean (WebP, memo, lazy gallery).
+ * Lazy-loading Before is essential so visiting /after never evaluates the
+ * main-thread busy-wait in criticalBloat.js.
  */
+const Before = lazy(() => import('./pages/Before.jsx'));
 const After = lazy(() => import('./pages/After.jsx'));
 
 export default function App() {
