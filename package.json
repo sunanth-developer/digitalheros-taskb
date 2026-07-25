@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Standalone demo rebuilding the Ramky Estates hero section to prove performance recommendations (Before vs After).",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "cp index.dev.html index.html && vite",
+    "build": "cp index.dev.html index.html && vite build && node scripts/publish-to-root.js",
     "preview": "vite preview",
     "generate:images": "node scripts/generate-images.js"
   },
