@@ -1,0 +1,79 @@
+:root {
+  /* Design tokens for a luxury real-estate look */
+  --color-ink: #0e1620;
+  --color-ink-soft: #1a2634;
+  --color-cream: #f6f2ea;
+  --color-gold: #c9a15a;
+  --color-gold-strong: #b98d3e;
+  --color-muted: rgba(246, 242, 234, 0.72);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --radius: 12px;
+  --maxw: 1200px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* System font stack as the baseline so text renders instantly even before
+     web fonts finish loading. Web fonts are layered on top per-page. */
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  margin: 0;
+  line-height: 1.1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Visually-hidden helper for accessible-only text (used in the After page). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard focus visibility (accessibility). */
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}

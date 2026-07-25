@@ -1,0 +1,44 @@
+.badge {
+  position: fixed;
+  z-index: 50;
+  /* Sit above the credit footer so the required Digital Heroes line stays visible */
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(14, 22, 32, 0.92);
+  color: #fff;
+  font-size: 0.82rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.before .dot {
+  background: #e5533c;
+}
+
+.after .dot {
+  background: #43c07a;
+}
+
+.label {
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.switch {
+  color: var(--color-gold);
+  font-weight: 600;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 12px;
+}

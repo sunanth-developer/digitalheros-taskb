@@ -1,0 +1,32 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-cream);
+}
+
+.mark {
+  color: var(--color-gold);
+  flex: 0 0 auto;
+}
+
+.word {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.word strong {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.word em {
+  font-style: normal;
+  font-size: 0.62rem;
+  letter-spacing: 0.42em;
+  color: var(--color-gold);
+  margin-top: 2px;
+}

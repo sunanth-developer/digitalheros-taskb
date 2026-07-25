@@ -1,0 +1,24 @@
+.footer {
+  width: 100%;
+  padding: 28px 24px;
+  text-align: center;
+  background: var(--color-ink);
+  border-top: 1px solid rgba(246, 242, 234, 0.12);
+}
+
+.credit {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.credit a {
+  color: var(--color-cream);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.18s ease;
+}
+
+.credit a:hover {
+  color: var(--color-gold);
+}

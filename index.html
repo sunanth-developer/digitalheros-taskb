@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Performance demo: rebuilding a real-estate hero section to compare unoptimized (Before) vs optimized (After) frontend performance."
+    />
+    <title>Hero Performance Demo — Before vs After</title>
+    <!--
+      NOTE: We intentionally do NOT preload the hero image here at the document level,
+      because the "Before" and "After" pages have different image strategies.
+      The "After" page injects its own <link rel="preload"> for the LCP image at runtime.
+    -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
